@@ -24,11 +24,11 @@ def tokenize_input(tokenizer, model, dataset_name: str, dataset, user_request):
     df_columns = list(dataset.columns)
     condition_1 = f"You have a DataFrame called {dataset_name} with these columns: {df_columns}. Using this dataset, you will be asked to generate some plots for \
 exploration purpose so the user can better understand the dataset. \nUser requirement: "
-    condition_2 = "\nBased on the requirement, generate a python function called Solution() without any parameters that generate the requested plots. When generating \
+    condition_2 = "\nBased on the requirement, generate one python function called Solution() without any parameters that generate the requested plots. When generating \
 plots, use the Matplotlib library and the function shouldn't return anything but simply show the plot direcrly using plt.show(). Everything besides the fucntion itself \
 should not be included, so any comments, explanation, and reasoning are not needed."
-    condition_3 = "\nAfter the plot is shown, use the .describe() function in pandas to get the key statistics information about the DataFrame. You should print out the \
-statistics of the features/columns used in the plot, and print a brief summary paragraph about the plot. For example, given a health dataframe called health_df and the \
+    condition_3 = "Use the .describe() function in pandas to get the key statistics information about the DataFrame. You should print out the \
+statistics of the features/columns used in the plot, and write a brief summary paragraph about the plot. For example, given a health dataframe called health_df and the \
 user request of 'Give me a scatter plot to show the relationship between height and weight', you should first generate and show the plot, then you find the statistics \
 of the height and weight column using health_df.describe(), and finally write a short paragraph summarizing the plot. \n\nYour function:\n"
     prompt = condition_1 + user_request + condition_2 + condition_3
