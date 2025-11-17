@@ -88,7 +88,7 @@ def main():
     if result == 1:
         print ("Your requested plots are successfully generated.")
     else:
-        print ("Your requested plots failed to generate due to some errors.")
+        print ("Your requested plots failed to generate due to above errors.")
     
 if __name__ == "__main__":
     main()
