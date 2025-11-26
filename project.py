@@ -8,10 +8,12 @@ from datasets import load_dataset
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import torch
 
 def load_datasets(dataset):
     data = load_dataset(dataset, split="train")
     df = data.to_pandas()
+    df.columns = [column.lower() for column in df.columns]
     return df
 
 def load_model_tokenizer(model_name):
@@ -20,20 +22,30 @@ def load_model_tokenizer(model_name):
     tokenizer.pad_token = tokenizer.eos_token
     return model, tokenizer
 
-def tokenize_input(tokenizer, model, dataset_name: str, dataset, user_request):
+def tokenize_input(tokenizer, model, dataset_name: str, dataset, user_request, plot_type):
     df_columns = list(dataset.columns)
     condition_1 = f"You have a DataFrame called {dataset_name} with these columns: {df_columns}. Using this dataset, you will be asked to generate some plots for \
 exploration purpose so the user can better understand the dataset. \nUser requirement: "
-    condition_2 = "\nBased on the requirement, generate one python function called Solution() without any parameters that generate the requested plots. When generating \
-plots, use the Matplotlib library and the function shouldn't return anything but simply show the plot direcrly using plt.show(). Everything besides the fucntion itself \
-should not be included, so any comments, explanation, and reasoning are not needed."
-    condition_3 = "Use the .describe() function in pandas to get the key statistics information about the DataFrame. You should print out the \
-statistics of the features/columns used in the plot, and write a brief summary paragraph about the plot. For example, given a health dataframe called health_df and the \
-user request of 'Give me a scatter plot to show the relationship between height and weight', you should first generate and show the plot, then you find the statistics \
-of the height and weight column using health_df.describe(), and finally write a short paragraph summarizing the plot. \n\nYour function:\n"
-    prompt = condition_1 + user_request + condition_2 + condition_3
-    input_tokens = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=4096).to(model.device)
-    return input_tokens
+
+    condition_2 = f"\nBased on the requirement, generate one python function called Solution() without any parameters that generate the requested {plot_type}. When \
+generating plots, use the Matplotlib library and the function shouldn't return anything but simply show the plot directly using plt.show(). Everything besides the \
+function itself should not be included, so any comments, explanation, and reasoning are not needed."
+
+    condition_3 = f"You have a DataFrame called {dataset_name} with these columns: {df_columns}. Here's the user requirement to explore the DataFrame: "
+
+    condition_4 = "\nUse the .describe() function in pandas to get the key statistics information about the DataFrame. You should only print out the statistics of the \
+columns involved in the user requirement, and write a brief summary paragraph of the plot described in the user requirement based on the statistics information. For \
+example, given a health dataframe called health_df and the user request of 'Give me a scatter plot to show the relationship between height and weight', you should \
+first use health_df.describe() and print out the statistics of column height and weight, strictly in the format of \
+'{'height': {'mean': 10.2, 'std': 1.8, 'min': 1.2, ...}, 'weight': {'mean': 50.2, 'std': 2.8, 'min': 41.2, ...}}'.\
+Then, under the header of 'Summary:', write a summary paragraph describing the pattern and trend of the scatter plot mentioned in the user requirement. \
+\n\nYour statistics and summary paragraph:\n"
+
+    code_prompt = condition_1 + user_request + condition_2
+    stats_prompt = condition_3 + user_request + condition_4
+    code_input_tokens = tokenizer(code_prompt, return_tensors="pt", truncation=True, max_length=4096).to(model.device)
+    stats_input_tokens = tokenizer(stats_prompt, return_tensors="pt", truncation=True, max_length=4096).to(model.device)
+    return code_input_tokens, stats_input_tokens
 
 def generate_code(tokenizer, model, input_tokens):
     input_len = len(input_tokens.input_ids[0])
@@ -42,6 +54,13 @@ def generate_code(tokenizer, model, input_tokens):
     output_code = output_code.replace("```python```", "").replace("```", "")
     output_code = output_code.strip()
     return output_code
+
+def generate_stats_summary(tokenizer, model, input_tokens):
+    input_len = len(input_tokens.input_ids[0])
+    model_output = model.generate(**input_tokens, max_new_tokens=300)
+    output_texts = tokenizer.decode(model_output[input_len:], skip_special_tokens=True)
+    output_texts = output_texts.strip()
+    return output_texts
 
 def execute_code(code, dataset_name, df):
     local_vars = {}
@@ -77,10 +96,12 @@ def main():
         elif dataset_choice == 2:
             dataset_name = "flower_df"
             dataset = flower_df
-    user_request = input("\nEnter your request:\n")
+    user_request = input("\nAny columns mentioned should be enclosed in quotations. Enter your request:\n")
+    plot_type = input("\nEnter the type of plot you want:\n")
 
-    input_tokens = tokenize_input(tokenizer, model, dataset_name, dataset, user_request)
-    output_code = generate_code(tokenizer, model, input_tokens)
+    code_input_tokens, stats_input_tokens = tokenize_input(tokenizer, model, dataset_name, dataset, user_request, plot_type)
+    output_code = generate_code(tokenizer, model, code_input_tokens)
+    stats_texts = generate_stats_summary(tokenizer, model, stats_input_tokens)
     
     print ("\nThanks, your request is received. I'm currently generating code to complete your request.")
     print (f"\n\nCode generated to complete your request: \n{output_code}\n\n")
@@ -89,6 +110,8 @@ def main():
         print ("Your requested plots are successfully generated.")
     else:
         print ("Your requested plots failed to generate due to above errors.")
+    print ("\n\nHere's the statistics information of the features included, and a summary paragraph of the plot:\n")
+    print (stats_texts)
     
 if __name__ == "__main__":
     main()
