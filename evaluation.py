@@ -3,84 +3,24 @@
 ### CS 4130
 ### 12/05/2025
 
-from project import load_datasets, load_model_tokenizer, tokenize_input, generate_code, generate_stats_summary, execute_code
+from project import load_datasets, load_model_tokenizer, tokenize_input, tokenize_summary_prompt, generate_plot_code, generate_stats_code, generate_summary, execute_code
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from matplotlib.collections import PathCollection, QuadMesh
-from matplotlib.patches import Wedge
 from matplotlib.image import AxesImage
-from datasets import load_dataset
+from matplotlib.patches import Wedge
+from test_case import test_cases
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import ast
 import re
 
-ev_df = load_datasets("UrvishAhir1/Electric-Vehicle-Specs-Dataset-2025")
-flower_df = load_datasets("brjapon/iris")
-model, tokenizer = load_model_tokenizer("Qwen/Qwen3-8B")
-
-test_cases = [
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a bar chart showing the average 'top_speed_kmh' for each 'brand'.",
-        "plot_type": "Bar chart"
-    },
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a bar chart showing the average 'battery_capacity_kwh' for each 'battery_type'.",
-        "plot_type": "Bar chart"
-    },
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a scatter plot showing the relationship between 'top_speed_kmh' and 'acceleration_0_100_s'.",
-        "plot_type": "Scatter plot"
-    },
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a scatter plot showing the relationship between 'efficiency_wh_per_km' and 'range_km'.",
-        "plot_type": "Scatter plot"
-    },
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a density plot with two curves showing the distribution of 'length_mm' and 'Width_mm'.",
-        "plot_type": "Density plot"
-    },
-    {
-        "dataset_name":  "ev_df",
-        "dataset": ev_df,
-        "user_request": "Give me a histogram showing the distribution of 'number_of_cells'.",
-        "plot_type": "Histogram"
-    },
-    {
-        "dataset_name":  "flower_df",
-        "dataset": flower_df,
-        "user_request": "Give me a histogram showing the distribution of 'PetalWidthCm'.",
-        "plot_type": "Histogram"
-    },
-    {
-        "dataset_name":  "flower_df",
-        "dataset": flower_df,
-        "user_request": "Give me a pie chart showing the distribution of 'Species'.",
-        "plot_type": "Pie chart"
-    },
-    {
-        "dataset_name":  "flower_df",
-        "dataset": flower_df,
-        "user_request": "Give me a frequency heat map of 'SepalLengthCm' VS 'SepalWidthCm'.",
-        "plot_type": "Heat map"
-    },
-    {
-        "dataset_name":  "flower_df",
-        "dataset": flower_df,
-        "user_request": "Give me a frequency heat map of 'PetalLengthCm' VS 'PetalWidthCm'.",
-        "plot_type": "Heat map"
-    }
-]
+ev_df = load_datasets("Data/electric_vehicles_spec_2025.csv")
+flower_df = load_datasets("Data/Iris.csv")
+model, tokenizer = load_model_tokenizer("Qwen/Qwen3-4B")
+dataset_name_map = {"ev_df": ev_df, "flower_df": flower_df}
+for test in test_cases:
+    test["dataset"] = dataset_name_map[test["dataset_name"]]
 
 def extract_function_name(code):
     try:
@@ -195,7 +135,7 @@ def correct_statistics(stats, user_request, dataset):
     stats_block = stats.split("Summary")[0].strip()
     columns_used = re.findall(r"[\"'](.*?)[\"']", user_request)
     existing_columns_used = [col for col in columns_used if col in list(dataset.columns)]
-    correct_stats = dataset[columns_used].describe().to_dict()
+    correct_stats = dataset[existing_columns_used].describe().to_dict()
     try:
         parsed_stats = ast.literal_eval(stats_block)
     except:
@@ -230,7 +170,7 @@ def evaluate_code(code, stats, dataset_name, dataset, plot_type, user_request):
         plot_type_correct = True if plot_type in ["line plot", "density plot"] else False
     else:
         plot_type_correct = (plot_type == find_plot_type(code, dataset_name, dataset))
-    statistics_correct = correct_statistics(code, user_request, dataset)
+    statistics_correct = correct_statistics(stats, user_request, dataset)
 
     evaluation = {
         "Execution successful": execution_success,
@@ -252,10 +192,11 @@ def main():
         dataset = test["dataset"]
         user_request = test["user_request"].lower()
         plot_type = test["plot_type"].lower()
-        code_input_tokens, stats_input_tokens = tokenize_input(tokenizer, model, dataset_name, dataset, user_request, plot_type, user_request)
-        output_code = generate_code(tokenizer, model, code_input_tokens)
-        stats_texts = generate_stats_summary(tokenizer, model, stats_input_tokens)
-        evaluation = evaluate_code(output_code, stats_texts, dataset_name, dataset, plot_type)
+        plot_input_tokens, stats_input_tokens = tokenize_input(tokenizer, model, dataset_name, dataset, user_request, plot_type)
+        plot_code = generate_plot_code(tokenizer, model, plot_input_tokens)
+        stats_code = generate_stats_code(tokenizer, model, stats_input_tokens)
+        stats = execute_code(stats_code, dataset_name, dataset)[1]
+        evaluation = evaluate_code(plot_code, stats, dataset_name, dataset, plot_type, user_request)
         print (f"Evaluation of agent output code from test case {idx}:\n{evaluation}\n\n")
 
 if __name__ == "__main__":
