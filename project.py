@@ -1,10 +1,11 @@
 ### Kuan-Chun Chiu, Karl Thilking
 ### Prof. Guha
 ### CS 4130
-### 12/05/2025
+### 12/12/2025
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 import numpy as np
 import torch
@@ -43,7 +44,7 @@ def tokenize_input(tokenizer, model, dataset_name: str, dataset, user_request, p
     # You have a DataFrame called {dataset_name} with columns: {df_columns}
     # The function should be named Stats() and take no parameters.
     # Assume {dataset_name} is already available in the environment.
-    # Use {dataset_name}{columns_used}.describe() to get the statistics information of the {columns_used} columns.
+    # Use {dataset_name}[{columns_used}].describe() to get the statistics information of the {columns_used} columns.
     # The 'Stats()' function should return the statistics information of the {columns_used} columns.
     # Write the function ONCE, don't repeat it. Don't add any explanation after the function.
 
@@ -95,7 +96,7 @@ def generate_summary(summary_tokens):
 
 def execute_code(code, dataset_name, df):
     local_vars = {}
-    global_vars = {dataset_name: df, "plt": plt, "pd": pd, "np": np}
+    global_vars = {dataset_name: df, "plt": plt, "pd": pd, "np": np, "sns": sns}
     try:
         exec(code, global_vars, local_vars)
         if "Solution" in local_vars:

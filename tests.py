@@ -1,0 +1,307 @@
+id = "id"
+dataset_name = "dataset_name"
+user_request = "user_request"
+plot_type = "plot_type"
+
+test_cases = [
+    {
+        id: 1, 
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the average 'top_speed_kmh' for each 'brand'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 2,
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the average 'battery_capacity_kwh' for each 'battery_type'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 3,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing the relationship between 'top_speed_kmh' and 'acceleration_0_100_s'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 4,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing the relationship between 'efficiency_wh_per_km' and 'range_km'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 5,
+        dataset_name: "ev_df",
+        user_request: "Give me a density plot with two curves showing the distribution of 'length_mm' and 'width_mm'.",
+        plot_type: "Density plot"
+    },
+    {
+        id: 6, 
+        dataset_name: "ev_df",
+        user_request: "Give me a histogram showing the distribution of 'number_of_cells'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 7,
+        dataset_name: "flower_df",
+        user_request: "Give me a histogram showing the distribution of 'PetalWidthCm'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 8,
+        dataset_name: "flower_df",
+        user_request: "Give me a pie chart showing the distribution of 'Species'.",
+        plot_type: "Pie chart"
+    },
+    {
+        id: 9,
+        dataset_name: "flower_df",
+        user_request: "Give me a frequency heat map of 'SepalLengthCm' VS 'SepalWidthCm'.",
+        plot_type: "Heat map"
+    },
+    {
+        id: 10,
+        dataset_name: "flower_df",
+        user_request: "Give me a frequency heat map of 'PetalLengthCm' VS 'PetalWidthCm'.",
+        plot_type: "Heat map"
+    },
+    {
+        id: 11,
+        dataset_name: "flower_df",
+        user_request: "Give me a box plot comparing 'SepalLengthCm' across different 'Species'.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 12,
+        dataset_name: "flower_df",
+        user_request: "Give me a scatter plot showing the relationship between 'PetalLengthCm' and 'PetalWidthCm' colored by 'Species'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 13,
+        dataset_name: "flower_df",
+        user_request: "Give me a violin plot showing the distribution of 'SepalWidthCm' for each 'Species'.",
+        plot_type: "Violin plot"
+    },
+    {
+        id: 14,
+        dataset_name: "flower_df",
+        user_request: "Give me a line chart showing the trend of 'PetalLengthCm' values ordered by 'Id'.",
+        plot_type: "Line chart"
+    },
+    {
+        id: 15,
+        dataset_name: "flower_df",
+        user_request: "Give me a bar chart showing the count of flowers for each 'Species'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 16,
+        dataset_name: "ev_df",
+        user_request: "Give me a pie chart showing the distribution of 'drivetrain' types.",
+        plot_type: "Pie chart"
+    },
+    {
+        id: 17,
+        dataset_name: "ev_df",
+        user_request: "Give me a box plot comparing 'range_km' across different 'segment' categories.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 18,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing 'battery_capacity_kWh' vs 'range_km' colored by 'drivetrain'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 19,
+        dataset_name: "ev_df",
+        user_request: "Give me a line chart showing the average 'torque_nm' for each 'seats' category.",
+        plot_type: "Line chart"
+    },
+    {
+        id: 20,
+        dataset_name: "ev_df",
+        user_request: "Give me a frequency heat map of 'fast_charging_power_kw_dc' VS 'battery_capacity_kWh'.",
+        plot_type: "Heat map"
+    },
+    {
+        id: 21,
+        dataset_name: "flower_df",
+        user_request: "Give me a histogram showing the distribution of 'SepalLengthCm'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 22,
+        dataset_name: "flower_df",
+        user_request: "Give me a box plot comparing 'PetalWidthCm' across different 'Species'.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 23,
+        dataset_name: "ev_df",
+        user_request: "Give me a histogram showing the distribution of 'acceleration_0_100_s'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 24,
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the count of vehicles for each 'car_body_type'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 25,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing 'torque_nm' vs 'acceleration_0_100_s'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 26,
+        dataset_name: "flower_df",
+        user_request: "Give me a density plot showing the distribution of 'SepalWidthCm'.",
+        plot_type: "Density plot"
+    },
+    {
+        id: 27,
+        dataset_name: "ev_df",
+        user_request: "Give me a violin plot showing the distribution of 'top_speed_kmh' for each 'drivetrain'.",
+        plot_type: "Violin plot"
+    },
+    {
+        id: 28,
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the average 'range_km' for each 'car_body_type'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 29,
+        dataset_name: "flower_df",
+        user_request: "Give me a scatter plot showing 'SepalLengthCm' vs 'SepalWidthCm' colored by 'Species'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 30,
+        dataset_name: "ev_df",
+        user_request: "Give me a histogram showing the distribution of 'cargo_volume_l'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 31,
+        dataset_name: "flower_df",
+        user_request: "Give me a line chart showing the average 'SepalLengthCm' for each 'Species'.",
+        plot_type: "Line chart"
+    },
+    {
+        id: 32,
+        dataset_name: "ev_df",
+        user_request: "Give me a box plot comparing 'efficiency_wh_per_km' across different 'drivetrain' types.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 33,
+        dataset_name: "ev_df",
+        user_request: "Give me a pie chart showing the distribution of 'segment' categories.",
+        plot_type: "Pie chart"
+    },
+    {
+        id: 34,
+        dataset_name: "flower_df",
+        user_request: "Give me a violin plot showing the distribution of 'PetalLengthCm' for each 'Species'.",
+        plot_type: "Violin plot"
+    },
+    {
+        id: 35,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing 'length_mm' vs 'width_mm' colored by 'car_body_type'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 36,
+        dataset_name: "flower_df",
+        user_request: "Give me a density plot with two curves showing the distribution of 'PetalLengthCm' and 'SepalLengthCm'.",
+        plot_type: "Density plot"
+    },
+    {
+        id: 37,
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the average 'fast_charging_power_kw_dc' for each 'brand'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 38,
+        dataset_name: "ev_df",
+        user_request: "Give me a histogram showing the distribution of 'towing_capacity_kg'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 39,
+        dataset_name: "flower_df",
+        user_request: "Give me a bar chart showing the average 'PetalWidthCm' for each 'Species'.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 40,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing 'height_mm' vs 'cargo_volume_l'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 41,
+        dataset_name: "flower_df",
+        user_request: "Give me a box plot comparing 'PetalLengthCm' across different 'Species'.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 42,
+        dataset_name: "ev_df",
+        user_request: "Give me a density plot showing the distribution of 'battery_capacity_kWh'.",
+        plot_type: "Density plot"
+    },
+    {
+        id: 43,
+        dataset_name: "ev_df",
+        user_request: "Give me a bar chart showing the count of vehicles for each 'seats' category.",
+        plot_type: "Bar chart"
+    },
+    {
+        id: 44,
+        dataset_name: "flower_df",
+        user_request: "Give me a histogram showing the distribution of 'PetalLengthCm'.",
+        plot_type: "Histogram"
+    },
+    {
+        id: 45,
+        dataset_name: "ev_df",
+        user_request: "Give me a violin plot showing the distribution of 'battery_capacity_kWh' for each 'segment'.",
+        plot_type: "Violin plot"
+    },
+    {
+        id: 46,
+        dataset_name: "ev_df",
+        user_request: "Give me a line chart showing the average 'efficiency_wh_per_km' for each 'car_body_type'.",
+        plot_type: "Line chart"
+    },
+    {
+        id: 47,
+        dataset_name: "flower_df",
+        user_request: "Give me a line chart showing the trend of 'SepalWidthCm' values ordered by 'Id'.",
+        plot_type: "Line chart"
+    },
+    {
+        id: 48,
+        dataset_name: "ev_df",
+        user_request: "Give me a box plot comparing 'torque_nm' across different 'segment' categories.",
+        plot_type: "Box plot"
+    },
+    {
+        id: 49,
+        dataset_name: "ev_df",
+        user_request: "Give me a scatter plot showing 'number_of_cells' vs 'battery_capacity_kWh' colored by 'battery_type'.",
+        plot_type: "Scatter plot"
+    },
+    {
+        id: 50,
+        dataset_name: "flower_df",
+        user_request: "Give me a density plot with two curves showing the distribution of 'PetalWidthCm' and 'SepalWidthCm'.",
+        plot_type: "Density plot"
+    }
+]

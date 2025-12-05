@@ -1,15 +1,16 @@
 ### Kuan-Chun Chiu, Karl Thilking
 ### Prof. Guha
 ### CS 4130
-### 12/05/2025
+### 12/12/2025
 
 from project import load_datasets, load_model_tokenizer, tokenize_input, tokenize_summary_prompt, generate_plot_code, generate_stats_code, generate_summary, execute_code
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from matplotlib.collections import PathCollection, QuadMesh
 from matplotlib.image import AxesImage
 from matplotlib.patches import Wedge
-from test_case import test_cases
 import matplotlib.pyplot as plt
+from tests import test_cases
+import seaborn as sns
 import pandas as pd
 import numpy as np
 import ast
@@ -53,10 +54,9 @@ def correct_df_name(code, dataset_name):
     try:
         parsed_code = ast.parse(code)
         for node in ast.walk(parsed_code):
-            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
-                if node.id != dataset_name:
-                    return False
-        return True
+            if isinstance(node, ast.Name) and node.id == dataset_name:
+                    return True
+        return False
     except Exception:
         return False
 
@@ -64,13 +64,12 @@ def correct_columns(code, dataset):
     try:
         parsed_code = ast.parse(code)
         df_columns = list(dataset.columns)
-        column_used = []
         for node in ast.walk(parsed_code):
-            if isinstance(node, ast.Constant) and isinstance(node.s, str):
-                column_used.append(node.s)
-        for column in column_used:
-            if column not in df_columns:
-                return False
+            if isinstance(node, ast.Subscript):
+                if isinstance(node.value, ast.Name):
+                    if isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, str):
+                        if node.slice.value not in df_columns:
+                            return False
         return True
     except Exception:
         return False
@@ -100,55 +99,61 @@ def correct_title_labels(code, dataset_name, dataset):
         return False
 
 def find_plot_type(code, dataset_name, dataset):
-    original_show = plt.show
-    plt.show = lambda: None
-    local_vars = {}
-    global_vars = {dataset_name: dataset, "plt": plt, "pd": pd, "np": np}
-    try:
-        exec(code, global_vars, local_vars)
-        if "Solution" in local_vars:
-            local_vars["Solution"]()
-            ax = plt.gca()
-            if len(ax.lines) > 0:
-                return "line plot"
-            elif ax.collections and isinstance(ax.collections[0], PathCollection):
-                return "scatter plot"
-            elif (ax.images and isinstance(ax.images[0], AxesImage)) or (ax.collections and isinstance(ax.collections[0], QuadMesh)):
-                return "heat map"
-            elif ax.patches and all(isinstance(p, Wedge) for p in ax.patches):
-                return "pie chart"
-            elif ax.patches:
-                widths = {round(p.get_width(), 5) for p in ax.patches}
-                if len(widths) == 1 and list(widths)[0] < 0.5:
-                    return "histogram"
-                return "bar chart"
-            return "unknown"
-        else:
-            return "Unknown"
-    except Exception:
-        plt.show = original_show
+    if "plt.plot(" in code:
+        return "line plot"
+    elif "plt.bar(" in code:
+        return "bar chart"
+    elif "plt.hist(" in code:
+        return "histogram"
+    elif "plt.scatter(" in code:
+        return "scatter plot"
+    elif "plt.boxplot(" in code:
+        return "boxplot"
+    elif "plt.violinplot(" in code:
+        return "violin plot"
+    elif "plt.pie(" in code:
+        return "bar chart"
+    elif "sns.kdeplot(" in code:
+        return "density plot"
+    else:
         return "Unknown"
-    finally:
-        plt.show = original_show
 
 def correct_statistics(stats, user_request, dataset):
-    stats_block = stats.split("Summary")[0].strip()
+    parsed_stats = stats.to_dict()
     columns_used = re.findall(r"[\"'](.*?)[\"']", user_request)
     existing_columns_used = [col for col in columns_used if col in list(dataset.columns)]
-    correct_stats = dataset[existing_columns_used].describe().to_dict()
-    try:
-        parsed_stats = ast.literal_eval(stats_block)
-    except:
+    if not existing_columns_used:
         return False
+    correct_stats = dataset[existing_columns_used].describe().to_dict()
     for column in existing_columns_used:
         if column not in parsed_stats:
             return False
         for metric, value in correct_stats[column].items():
             if metric not in parsed_stats[column]:
                 return False
-            if not np.isclose(float(parsed_stats[column][metric]), float(value), atol=1e-6, rtol=1e-6):
-                return False
+            try:
+                a = float(parsed_stats[column][metric])
+                b = float(value)
+                if not np.isclose(a, b, atol=1e-6, rtol=1e-6):
+                    return False
+            except (TypeError, ValueError):
+                if str(parsed_stats[column][metric]) != str(value):
+                    return False
     return True
+
+def compute_pass_rate(evaluations):
+    pass_rate_dict = {}
+    metrics = ["Execution successful", "Correct number of functions", "Correct function name", "Correct number of function parameters",
+               "No extra reasoning/explanation/comments", "Correct plot type", "Correct DataFrame name used", "Correct column names used",
+               "Titles and x, y labels properly created", "Correct dataset statistics"]
+    for metric in metrics:
+        pass_rate_dict[metric] = 0
+    for evaluation in evaluations:
+        for key, value in evaluation.items():
+            pass_rate_dict[key] += 1 if value else 0
+    for metric in metrics:
+        pass_rate_dict[metric] = round(pass_rate_dict[metric] / len(evaluations), 3)
+    return pass_rate_dict
 
 def evaluate_code(code, stats, dataset_name, dataset, plot_type, user_request):
     original_show = plt.show
@@ -187,6 +192,7 @@ def evaluate_code(code, stats, dataset_name, dataset, plot_type, user_request):
     return evaluation
 
 def main():
+    all_evaluations = []
     for idx, test in enumerate(test_cases):
         dataset_name = test["dataset_name"]
         dataset = test["dataset"]
@@ -197,7 +203,10 @@ def main():
         stats_code = generate_stats_code(tokenizer, model, stats_input_tokens)
         stats = execute_code(stats_code, dataset_name, dataset)[1]
         evaluation = evaluate_code(plot_code, stats, dataset_name, dataset, plot_type, user_request)
-        print (f"Evaluation of agent output code from test case {idx}:\n{evaluation}\n\n")
+        all_evaluations.append(evaluation)
+        print (f"Evaluation of agent output code from test case {idx}:\n{evaluation}\n")
+    pass_rate = compute_pass_rate(all_evaluations)
+    print (f"Pass rate of all 50 test cases for each evaluation metrics:\n{pass_rate}")
 
 if __name__ == "__main__":
     main()
