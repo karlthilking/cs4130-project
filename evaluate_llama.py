@@ -80,6 +80,64 @@ def evaluate(code, df, columns, plot_type):
       v = False 
   return eval
 
+def correct_columns(code, columns):
+  if code is None:
+    return False
+  try:
+    found_columns = []
+    for c in columns:
+      if c.lower() in code.lower() and c.lower() not in found_columns:
+        found_columns.append(c.lower())
+  except:
+    return False
+  return columns.sort() == found_columns.sort()
+
+def correct_stats(stats, columns):
+  if stats is None:
+    return False
+  try:
+    found_columns = []
+    for s in stats.columns:
+      for c in columns:
+        if c.lower() in s.lower() and c.lower() not in found_columns:
+          found_columns.append(c.lower())
+  except:
+    return False
+  return found_columns.sort() == columns.sort()
+
+def correct_plot_type(code, plot_type):
+  bar = lambda code: 'bar' in code or 'barh' in code
+  scatter = lambda code: 'scatter' in code 
+  density = lambda code: 'plot' and 'kde' in code
+  histogram = lambda code: 'hist' in code
+  pie = lambda code: 'pie' in code 
+  heatmap = lambda code: any(x in code.lower() for x in ['sns.heatmap', 'pcolormesh', 'imshow'])
+  box = lambda code: 'boxplot' in code
+  violin = lambda code: 'violinplot' in code
+  line = lambda code: 'plt.plot' in code
+
+  match plot_type:
+    case 'Bar chart':
+      return bar(code)
+    case 'Scatter plot':
+      return scatter(code)
+    case 'Density plot':
+      return density(code)
+    case 'Histogram':
+      return histogram(code)
+    case 'Pie chart':
+      return pie(code)
+    case 'Heat map':
+      return heatmap(code)
+    case 'Box plot':
+      return box(code)
+    case 'Violin plot':
+      return violin(code)
+    case 'Line chart':
+      return line(code)
+    case _:
+      return False
+
 if __name__ == '__main__':
   model = Model()
   
@@ -99,6 +157,9 @@ if __name__ == '__main__':
     'No extra reasoning/explanation/comments': 0, 
     'Correct DataFrame name used': 0,
     'Titles and x, y labels properly created': 0, 
+    'Correct column names used': 0,
+    'Correct dataset statistics': 0,
+    'Correct plot type': 0
   }
 
   for test in tqdm(tests['test_cases'], total=len(tests['test_cases'])):
@@ -108,6 +169,7 @@ if __name__ == '__main__':
     columns = test['columns']
     plot_type = test['plot_type']
     code = model.generate_code(df, df_name, request)
+    stats = model.execute_code(code, df)
     result = evaluate(code, df, columns, plot_type)
 
     if result['execution_success']:
@@ -124,6 +186,12 @@ if __name__ == '__main__':
       eval['Correct DataFrame name used'] += 1
     if result['correct_labels']:
       eval['Titles and x, y labels properly created'] += 1
+    if correct_columns(code, columns):
+      eval['Correct column names used'] += 1
+    if correct_stats(stats, columns):
+      eval['Correct dataset statistics'] += 1
+    if correct_plot_type(code, plot_type):
+      eval['Correct plot type'] += 1
   
   for k, v in eval.items():
     print(f'{k}: {v/50}')
