@@ -3,248 +3,298 @@ test_cases:
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the average 'top_speed_kmh' for each 'brand'."
     plot_type: "Bar chart"
+    columns: ['top_speed_kmh', 'brand']
     
   - id: 2
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the average 'battery_capacity_kwh' for each 'battery_type'."
     plot_type: "Bar chart"
+    columns: ['battery_capacity_kwh', 'battery_type']
     
   - id: 3
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing the relationship between 'top_speed_kmh' and 'acceleration_0_100_s'."
     plot_type: "Scatter plot"
+    columns: ['top_speed_kmh', 'acceleration_0_100_s']
     
   - id: 4
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing the relationship between 'efficiency_wh_per_km' and 'range_km'."
     plot_type: "Scatter plot"
+    columns: ['efficiency_wh_per_km', 'range_km']
     
   - id: 5 
     dataset_name: "ev_df"
     user_request: "Give me a density plot with two curves showing the distribution of 'length_mm' and 'width_mm'."
     plot_type: "Density plot"
+    columns: ['length_mm', 'width_mm']
     
   - id: 6 
     dataset_name: "ev_df"
     user_request: "Give me a histogram showing the distribution of 'number_of_cells'."
     plot_type: "Histogram"
+    columns: ['number_of_cells']
         
   - id: 7 
     dataset_name: "flower_df"
     user_request: "Give me a histogram showing the distribution of 'PetalWidthCm'."
     plot_type: "Histogram"
+    columns: ['petalwidthcm']
     
   - id: 8 
     dataset_name: "flower_df"
     user_request: "Give me a pie chart showing the distribution of 'Species'."
     plot_type: "Pie chart"
+    columns: ['species']
     
   - id: 9 
     dataset_name: "flower_df"
     user_request: "Give me a frequency heat map of 'SepalLengthCm' VS 'SepalWidthCm'."
     plot_type: "Heat map"
+    columns: ['sepallengthcm', 'sepalwidthcm']
     
   - id: 10 
     dataset_name: "flower_df"
     user_request: "Give me a frequency heat map of 'PetalLengthCm' VS 'PetalWidthCm'."
     plot_type: "Heat map"
+    columns: ['petallengthcm', 'petalwidthcm']
   
   - id: 11
     dataset_name: "flower_df"
     user_request: "Give me a box plot comparing 'SepalLengthCm' across different 'Species'."
     plot_type: "Box plot"
-    
+    columns: ['sepallengthcm', 'species']
+
   - id: 12 
     dataset_name: "flower_df"
     user_request: "Give me a scatter plot showing the relationship between 'PetalLengthCm' and 'PetalWidthCm' colored by 'Species'."
     plot_type: "Scatter plot"
+    columns: ['petallengthcm', 'petalwidthcm', 'species']
     
   - id: 13 
     dataset_name: "flower_df"
     user_request: "Give me a violin plot showing the distribution of 'SepalWidthCm' for each 'Species'."
     plot_type: "Violin plot"
+    columns: ['sepalwidthcm', 'species']
     
   - id: 14
     dataset_name: "flower_df"
     user_request: "Give me a line chart showing the trend of 'PetalLengthCm' values ordered by 'Id'."
     plot_type: "Line chart"
+    columns: ['petallengthcm', 'id']
     
   - id: 15
     dataset_name: "flower_df"
     user_request: "Give me a bar chart showing the count of flowers for each 'Species'."
     plot_type: "Bar chart"
+    columns: ['species']
     
   - id: 16
     dataset_name: "ev_df"
     user_request: "Give me a pie chart showing the distribution of 'drivetrain' types."
     plot_type: "Pie chart"
+    columns: ['drivetrain']
     
   - id: 17
     dataset_name: "ev_df"
     user_request: "Give me a box plot comparing 'range_km' across different 'segment' categories."
     plot_type: "Box plot"
+    columns: ['range_km', 'segment']
     
   - id: 18
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing 'battery_capacity_kWh' vs 'range_km' colored by 'drivetrain'."
     plot_type: "Scatter plot"
+    columns: ['battery_capacity_kwh', 'range_km', 'drivetrain']
     
   - id: 19
     dataset_name: "ev_df"
     user_request: "Give me a line chart showing the average 'torque_nm' for each 'seats' category."
     plot_type: "Line chart"
+    columns: ['torque_nm', 'seats']
     
   - id: 20
     dataset_name: "ev_df"
     user_request: "Give me a frequency heat map of 'fast_charging_power_kw_dc' VS 'battery_capacity_kWh'."
     plot_type: "Heat map"
+    columns: ['fast_charging_power_kw_dc', 'battery_capacity_kwh']
     
   - id: 21
     dataset_name: "flower_df"
     user_request: "Give me a histogram showing the distribution of 'SepalLengthCm'."
     plot_type: "Histogram"
+    columns: ['sepallengthcm']
     
   - id: 22
     dataset_name: "flower_df"
     user_request: "Give me a box plot comparing 'PetalWidthCm' across different 'Species'."
     plot_type: "Box plot"
+    columns: ['petalwidthcm', 'species']
     
   - id: 23
     dataset_name: "ev_df"
     user_request: "Give me a histogram showing the distribution of 'acceleration_0_100_s'."
     plot_type: "Histogram"
+    columns: ['acceleration_0_100_s']
     
   - id: 24
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the count of vehicles for each 'car_body_type'."
     plot_type: "Bar chart"
+    columns: ['car_body_type']
     
   - id: 25
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing 'torque_nm' vs 'acceleration_0_100_s'."
     plot_type: "Scatter plot"
+    columns: ['torque_nm', 'acceleration_0_100_s']
     
   - id: 26
     dataset_name: "flower_df"
     user_request: "Give me a density plot showing the distribution of 'SepalWidthCm'."
     plot_type: "Density plot"
+    columns: ['sepalwidthcm']
     
   - id: 27
     dataset_name: "ev_df"
     user_request: "Give me a violin plot showing the distribution of 'top_speed_kmh' for each 'drivetrain'."
     plot_type: "Violin plot"
+    columns: ['top_speed_kmh', 'drivetrain']
     
   - id: 28
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the average 'range_km' for each 'car_body_type'."
     plot_type: "Bar chart"
+    columns: ['range_km', 'car_body_type']
     
   - id: 29
     dataset_name: "flower_df"
     user_request: "Give me a scatter plot showing 'SepalLengthCm' vs 'SepalWidthCm' colored by 'Species'."
     plot_type: "Scatter plot"
+    columns: ['sepallengthcm', 'sepalwidthcm', 'species']
     
   - id: 30
     dataset_name: "ev_df"
     user_request: "Give me a histogram showing the distribution of 'cargo_volume_l'."
     plot_type: "Histogram"
+    columns: ['cargo_volume_l']
     
   - id: 31
     dataset_name: "flower_df"
     user_request: "Give me a line chart showing the average 'SepalLengthCm' for each 'Species'."
     plot_type: "Line chart"
+    columns: ['sepallengthcm', 'species']
     
   - id: 32
     dataset_name: "ev_df"
     user_request: "Give me a box plot comparing 'efficiency_wh_per_km' across different 'drivetrain' types."
     plot_type: "Box plot"
+    columns: ['efficiency_wh_per_km', 'drivertrain']
     
   - id: 33
     dataset_name: "ev_df"
     user_request: "Give me a pie chart showing the distribution of 'segment' categories."
     plot_type: "Pie chart"
+    columns: ['segment']
     
   - id: 34
     dataset_name: "flower_df"
     user_request: "Give me a violin plot showing the distribution of 'PetalLengthCm' for each 'Species'."
     plot_type: "Violin plot"
+    columns: ['petallengthcm', 'species']
     
   - id: 35
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing 'length_mm' vs 'width_mm' colored by 'car_body_type'."
     plot_type: "Scatter plot"
+    columns: ['length_mm', 'width_mm', 'car_body_type']
     
   - id: 36
     dataset_name: "flower_df"
     user_request: "Give me a density plot with two curves showing the distribution of 'PetalLengthCm' and 'SepalLengthCm'."
     plot_type: "Density plot"
-    
+    columns: ['petallengthcm', 'sepallengthcm']
+
   - id: 37
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the average 'fast_charging_power_kw_dc' for each 'brand'."
     plot_type: "Bar chart"
+    columns: ['fast_charging_power_kw_dc', 'brand']
     
   - id: 38
     dataset_name: "ev_df"
     user_request: "Give me a histogram showing the distribution of 'towing_capacity_kg'."
     plot_type: "Histogram"
+    columns: ['towing_capacity_kg']
     
   - id: 39
     dataset_name: "flower_df"
     user_request: "Give me a bar chart showing the average 'PetalWidthCm' for each 'Species'."
     plot_type: "Bar chart"
+    columns: ['petalwidthcm', 'species']
     
   - id: 40
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing 'height_mm' vs 'cargo_volume_l'."
     plot_type: "Scatter plot"
+    columns: ['height_mm', 'cargo_volume_l']
     
   - id: 41
     dataset_name: "flower_df"
     user_request: "Give me a box plot comparing 'PetalLengthCm' across different 'Species'."
     plot_type: "Box plot"
+    columns: ['petallengthcm', 'species']
     
   - id: 42
     dataset_name: "ev_df"
     user_request: "Give me a density plot showing the distribution of 'battery_capacity_kWh'."
     plot_type: "Density plot"
+    columns: ['battery_capacity_kwh']
     
   - id: 43
     dataset_name: "ev_df"
     user_request: "Give me a bar chart showing the count of vehicles for each 'seats' category."
     plot_type: "Bar chart"
+    columns: ['seats']
     
   - id: 44
     dataset_name: "flower_df"
     user_request: "Give me a histogram showing the distribution of 'PetalLengthCm'."
     plot_type: "Histogram"
+    columns: ['petallengthcm']
     
   - id: 45
     dataset_name: "ev_df"
     user_request: "Give me a violin plot showing the distribution of 'battery_capacity_kWh' for each 'segment'."
     plot_type: "Violin plot"
+    columns: ['battery_capacity_kwh', 'segment']
     
   - id: 46
     dataset_name: "ev_df"
     user_request: "Give me a line chart showing the average 'efficiency_wh_per_km' for each 'car_body_type'."
     plot_type: "Line chart"
+    columns: ['efficiency_wh_per_km', 'car_body_type']
     
   - id: 47
     dataset_name: "flower_df"
     user_request: "Give me a line chart showing the trend of 'SepalWidthCm' values ordered by 'Id'."
     plot_type: "Line chart"
+    columns: ['sepalwidthcm', 'id']
     
   - id: 48
     dataset_name: "ev_df"
     user_request: "Give me a box plot comparing 'torque_nm' across different 'segment' categories."
     plot_type: "Box plot"
+    columns: ['torque_nm', 'segment']
     
   - id: 49
     dataset_name: "ev_df"
     user_request: "Give me a scatter plot showing 'number_of_cells' vs 'battery_capacity_kWh' colored by 'battery_type'."
     plot_type: "Scatter plot"
+    columns: ['number_of_cells', 'battery_capacity_kwh', 'battery_type']
     
   - id: 50
     dataset_name: "flower_df"
     user_request: "Give me a density plot with two curves showing the distribution of 'PetalWidthCm' and 'SepalWidthCm'."
     plot_type: "Density plot"
+    columns: ['petalwidthcm', 'sepalwidthcm']
