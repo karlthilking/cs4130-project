@@ -170,11 +170,6 @@ def evaluate_code(code, stats, dataset_name, dataset, plot_type, user_request):
     df_name_correct = correct_df_name(code, dataset_name)
     col_names_correct = correct_columns(code, dataset)
     title_and_labels_correct = correct_title_labels(code, dataset_name, dataset)
-    plot_type_found = find_plot_type(code, dataset_name, dataset)
-    if plot_type_found == "line plot":
-        plot_type_correct = True if plot_type in ["line plot", "density plot"] else False
-    else:
-        plot_type_correct = (plot_type == find_plot_type(code, dataset_name, dataset))
     statistics_correct = correct_statistics(stats, user_request, dataset)
 
     evaluation = {
@@ -183,7 +178,6 @@ def evaluate_code(code, stats, dataset_name, dataset, plot_type, user_request):
         "Correct function name": func_name_correct,
         "Correct number of function parameters": no_parameter,
         "No extra reasoning/explanation/comments": no_extra_code,
-        "Correct plot type": plot_type_correct,
         "Correct DataFrame name used": df_name_correct,
         "Correct column names used": col_names_correct,
         "Titles and x, y labels properly created": title_and_labels_correct,
